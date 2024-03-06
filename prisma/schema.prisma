@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Area {
+  id          Int          @id @default(autoincrement())
+  name        String?
+  displayName String?
+  prefectures Prefecture[]
+}
+
+model Company {
+  id            Int        @id @default(autoincrement())
+  name          String
+  email         String
+  prefectureId  Int
+  phone         String?
+  postcode      String
+  city          String
+  local         String
+  streetAddress String?
+  businessHour  String?
+  image         String?
+  fax           String?
+  url           String?
+  licenceNumber String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @default(now()) @updatedAt()
+  deletedAt     DateTime?
+  prefecture    Prefecture @relation(fields: [prefectureId], references: [id], onDelete: Cascade)
+}
+
+model Postcode {
+  id             Int     @id @default(autoincrement())
+  postcode       String?
+  prefectureKana String?
+  cityKana       String?
+  localKana      String?
+  prefecture     String?
+  city           String?
+  local          String?
+}
+
+model Prefecture {
+  id          Int       @id @default(autoincrement())
+  areaId      Int?
+  name        String?
+  displayName String?
+  companies   Company[]
+  area        Area?     @relation(fields: [areaId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  name      String?
+  email     String    @unique
+  age       Int?
+  gender    Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt()
+  deletedAt DateTime?
+}
