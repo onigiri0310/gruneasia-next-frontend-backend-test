@@ -3,30 +3,14 @@ import { type NextPage } from "next";
 import NextLink from 'next/link';
 import { AiFillEdit } from 'react-icons/ai';
 import NextHead from 'next/head';
+
 import { api } from "@/utils/api";
 import DeleteConfirmModal from "../_components/deleteButton";
 import dayjs from 'dayjs';
 
-// Company情報の型定義
-interface CompanyData {
-    id: number;
-    name: string;
-    email: string;
-    postcode: number;
-    prefecture: string;
-    city: string;
-    local: string;
-    streetAddress: string;
-    businessHour: string;
-    regularHoliday: string;
-    phone: string;
-    fax: string;
-    url: string;
-    licenseNumber: string;
-}
-
 const CompanyCreate: NextPage = () => {
-    const { data, refetch } = api.company.get.useQuery();
+    const { data, refetch } = api.company.get.useQuery<Company[]>();
+
 
     const dateFormat = (date: Date) => {
         return dayjs(date).format('YYYY/MM/DD H:mm:ss')
@@ -55,34 +39,34 @@ const CompanyCreate: NextPage = () => {
         </tr>
     );
 
-    const rows = data?.map((company: CompanyData, index: number) => (
+    const rows = data?.map((el, index: number) => (
         <tr key={index}>
-            <td>{company.name}</td>
-            <td>{company.email}</td>
-            <td>{company.postcode}</td>
-            <td>{company.prefecture}</td>
-            <td>{company.city}</td>
-            <td>{company.local}</td>
-            <td>{company.streetAddress}</td>
-            <td>{company.businessHour}</td>
-            <td>{company.regularHoliday}</td>
-            <td>{company.phone}</td>
-            <td>{company.fax}</td>
-            <td>{company.url}</td>
-            <td>{company.licenseNumber}</td>
+            <td>{el.name}</td>
+            <td>{el.email}</td>
+            <td>{el.postcode}</td>
+            <td>{el.prefecture}</td>
+            <td>{el.city}</td>
+            <td>{el.local}</td>
+            <td>{el.streetAddress}</td>
+            <td>{el.businessHour}</td>
+            <td>{el.regularHoliday}</td>
+            <td>{el.phone}</td>
+            <td>{el.fax}</td>
+            <td>{el.url}</td>
+            <td>{el.licenseNumber}</td>
             <td>
-                <Center>
-                    <NextLink href={`/company/${company.id}/edit`}>
-                        <Button
-                            size="xs"
-                            variant="outline"
-                            className="min-w-[5rem] max-w-[5rem]"
-                            compact leftIcon={<AiFillEdit size={14} />}>
+            <Center>
+                <NextLink href={`/company/${el.id}/edit`}>
+                    <Button
+                        size="xs"
+                        variant="outline"
+                        className="min-w-[5rem] max-w-[5rem]"
+                        compact leftIcon={<AiFillEdit size={14} />}>
                             Edit
-                        </Button>
-                    </NextLink>
-                    <DeleteConfirmModal id={company.id} onDeleted={onDeleted} />
-                </Center>
+                    </Button>
+                </NextLink>
+                <DeleteConfirmModal id={el.id} onDeleted={onDeleted} />
+            </Center>
             </td>
         </tr>
     ))
